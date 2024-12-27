@@ -36,6 +36,17 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentRepository.save(appointment));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
+        return appointmentRepository.findById(id)
+                .map(appointment -> {
+                    appointment.getPet().getName();
+                    appointment.getVeterinarian().getFirstName();
+                    return ResponseEntity.ok(appointment);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/pet/{petId}")
     public ResponseEntity<List<Appointment>> getPetAppointments(@PathVariable Long petId) {
         if (!petRepository.existsById(petId)) {
